@@ -36,7 +36,9 @@ public class PlayerCtrl : MonoBehaviour
 		transform.Rotate(Vector3.up * rotSpeed * mouseX * Time.deltaTime);
 		ctrl.Move((transform.forward * inpY + transform.right * inpX) * speed * Time.deltaTime);
 		
-		float offsetY = Mathf.Clamp(lookPos.position.y + (camYSpeed * mouseY * Time.deltaTime), camYLowerBound, camYUpperBound);
+		lookPos.Translate(Vector3.up * (camYSpeed * mouseY * Time.deltaTime));
+
+		float offsetY = Mathf.Clamp(lookPos.position.y, camYLowerBound, camYUpperBound);
 
 		lookPos.position = new Vector3(lookPos.position.x, offsetY, lookPos.position.z);
     }
