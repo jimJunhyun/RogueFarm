@@ -1,19 +1,119 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Linq;
+
+public class Slot
+{
+    public Seed seed;
+    public int count;
+
+	public Slot(Seed s, int c)
+	{
+		seed = s;
+		count = c;
+	}
+}
 
 public class Inventory : MonoBehaviour
 {
-    List<Seed> seeds = new List<Seed>();
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static Inventory instance;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	public Slot curSel;
+	public Slot prevSel 
+	{
+		get 
+		{
+			return inven[(curIdx + inven.Count - 1) % inven.Count];
+		} 
+				
+	}
+
+	public Slot postSel 
+	{
+		get
+		{
+			return inven[(curIdx + 1) % inven.Count];
+		}
+	}
+
+	System.Action onUpdateCur;
+
+	int curIdx;
+    List<Slot> inven = new List<Slot>();
+
+	private void Awake()
+	{
+		instance = this;
+	}
+	private void Update()
+	{
+		if(Input.mouseScrollDelta.y > 0.5f && inven.Count > 0)
+		{
+			curSel = postSel;
+			curIdx += 1;
+			curIdx %= inven.Count;
+			onUpdateCur?.Invoke();
+		}
+		if (Input.mouseScrollDelta.y < -0.5f && inven.Count > 0)
+		{
+			curSel = prevSel;
+			curIdx += inven.Count - 1;
+			curIdx %= inven.Count;
+			onUpdateCur?.Invoke();
+		}
+		//foreach (var item in inven)
+		//{
+		//	Debug.Log(item.seed.seedName + " : " + item.count);
+		//}
+	}
+
+	public void AddUpdateBhv(System.Action act)
+	{
+		onUpdateCur += act;
+	}
+
+	public void AddItem(Seed seed, int cnt)
+	{
+		Slot slot = inven.Find(item => item.seed.seedName == seed.seedName);
+		if (slot != null)
+		{
+			slot.count += cnt;
+		}
+		else
+		{
+			inven.Add(new Slot(seed, cnt));
+			if(inven.Count == 1)
+				curSel = inven[0];
+		}
+		onUpdateCur?.Invoke();
+	}
+	public bool UseItem(Seed seed, int cnt)
+	{
+		if(inven.Count == 0)
+			return false;
+		Slot slot = inven.Find(item => item.seed.seedName == seed.seedName);
+		if (slot != null && slot.count >= cnt) 
+		{ 
+			slot.count -= cnt;
+			if(slot.count == 0)
+			{
+				inven.Remove(slot);
+				if(inven.Count > 0)
+				{
+					curSel = inven[0];
+				}
+				else
+				{
+					curSel = null;
+				}
+				
+			}
+			onUpdateCur?.Invoke();
+			return true;
+		}
+			return false;
+		
+	}
 }
