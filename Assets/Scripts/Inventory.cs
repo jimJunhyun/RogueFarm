@@ -91,9 +91,10 @@ public class Inventory : MonoBehaviour
 	}
 	public bool UseItem(Seed seed, int cnt)
 	{
-		if(inven.Count == 0)
+		if(inven.Count == 0 || seed == null)
 			return false;
 		Slot slot = inven.Find(item => item.seed.seedName == seed.seedName);
+		int idx = inven.FindIndex(item => item.seed.seedName == seed.seedName);
 		if (slot != null && slot.count >= cnt) 
 		{ 
 			slot.count -= cnt;
@@ -102,7 +103,7 @@ public class Inventory : MonoBehaviour
 				inven.Remove(slot);
 				if(inven.Count > 0)
 				{
-					curSel = inven[0];
+					curSel = inven[idx];
 				}
 				else
 				{

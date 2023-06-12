@@ -44,10 +44,13 @@ public class SeedUI : MonoBehaviour
 		else
 		{
 			curSdImg.sprite = Inventory.instance.curSel.seed.icon;
+			curSdImg.enabled = true;
 			curCntTxt.text = Inventory.instance.curSel.count.ToString();
 			prevSdImg.sprite = Inventory.instance.prevSel.seed.icon;
+			prevSdImg.enabled = true;
 			prevCntTxt.text = Inventory.instance.prevSel.count.ToString();
 			postSdImg.sprite = Inventory.instance.postSel.seed.icon;
+			postSdImg.enabled = true;
 			postCntTxt.text = Inventory.instance.postSel.count.ToString();
 		}
 	}
@@ -55,10 +58,13 @@ public class SeedUI : MonoBehaviour
 	void DisableContent()
 	{
 		curSdImg.sprite = null;
+		curSdImg.enabled = false;
 		curCntTxt.text = "";
 		prevSdImg.sprite = null;
+		prevSdImg.enabled = false;
 		prevCntTxt.text = "";
 		postSdImg.sprite = null;
+		postSdImg.enabled = false;
 		postCntTxt.text = "";
 	}
 }
