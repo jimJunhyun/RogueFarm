@@ -66,6 +66,7 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 
 	float prevAtk;
 
+	[SerializeField]
 	int curPrice = 0;
 
 	const float AREALENGTH = 10f;

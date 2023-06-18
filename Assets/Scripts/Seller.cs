@@ -22,6 +22,7 @@ public class Seller : MonoBehaviour
 					if(hits[i].transform.TryGetComponent<ITradable>(out tr))
 					{
 						tr.OnSell();
+						CoinManager.instance.UIUpd();
 						break;
 					}
 				}

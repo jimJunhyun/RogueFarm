@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2651461017983937966}
   - component: {fileID: 8498312542586820266}
   m_Layer: 0
-  m_Name: SeedSow
+  m_Name: Treeish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

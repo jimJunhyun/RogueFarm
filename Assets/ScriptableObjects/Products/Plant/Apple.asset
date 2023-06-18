@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 240ec4ad847f38242a6ee170c5f73a9d, type: 3}
+  m_Script: {fileID: 11500000, guid: 361ffef15481f664ea0c53fac401ca65, type: 3}
   m_Name: Apple
   m_EditorClassIdentifier: 
-  seedName: "\uC0AC\uACFC\uC528"
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  myName: APPLE
+  myPrice: 40
+  icon: {fileID: 0}
   prefab: {fileID: 4022831445322236340, guid: 6e128be96b46a4f47a6a13e63a6ef65a, type: 3}
+  myType: 0

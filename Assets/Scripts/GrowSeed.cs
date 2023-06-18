@@ -21,7 +21,7 @@ public struct GrowSteps
 
 public class GrowSeed : MonoBehaviour, IEatable
 {
-	public string entityName;
+	//public string entityName;
 
 	public GrowStat curState;
 
@@ -40,6 +40,8 @@ public class GrowSeed : MonoBehaviour, IEatable
 	public void OnEaten(Animal by)
 	{
 		Debug.Log(by.entityName + "¿¡°Ô ¸ÔÈù ½Ä¹°");
+
+		by.curCalo += growSteps[growIdx].calo;
 		Destroy(gameObject);
 	}
 

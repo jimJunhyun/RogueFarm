@@ -6,10 +6,10 @@ using System.Linq;
 
 public class Slot
 {
-    public Seed seed;
+    public Products seed;
     public int count;
 
-	public Slot(Seed s, int c)
+	public Slot(Products s, int c)
 	{
 		seed = s;
 		count = c;
@@ -74,9 +74,9 @@ public class Inventory : MonoBehaviour
 		onUpdateCur += act;
 	}
 
-	public void AddItem(Seed seed, int cnt)
+	public void AddItem(Products seed, int cnt)
 	{
-		Slot slot = inven.Find(item => item.seed.seedName == seed.seedName);
+		Slot slot = inven.Find(item => item.seed.myName == seed.myName);
 		if (slot != null)
 		{
 			slot.count += cnt;
@@ -89,12 +89,12 @@ public class Inventory : MonoBehaviour
 		}
 		onUpdateCur?.Invoke();
 	}
-	public bool UseItem(Seed seed, int cnt, System.Action callback)
+	public bool UseItem(Products seed, int cnt, System.Action callback)
 	{
 		if(inven.Count == 0 || seed == null)
 			return false;
-		Slot slot = inven.Find(item => item.seed.seedName == seed.seedName);
-		int idx = inven.FindIndex(item => item.seed.seedName == seed.seedName);
+		Slot slot = inven.Find(item => item.seed.myName == seed.myName);
+		int idx = inven.FindIndex(item => item.seed.myName == seed.myName);
 		if (slot != null && slot.count >= cnt) 
 		{ 
 			callback();
