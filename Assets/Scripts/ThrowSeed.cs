@@ -7,11 +7,10 @@ public class ThrowSeed : MonoBehaviour
 {
 	public static ThrowSeed instance;
 
-
 	public float powerChargeSpeed = 1f;
 	public float throwDistance = 3f;
 
-	public DecalProjector seedSown;
+	public GameObject seedSown;
 
 	System.Action<float> onCharged;
 
@@ -53,10 +52,13 @@ public class ThrowSeed : MonoBehaviour
 			targetPos = hit.point;
 		}
 		targetPos.y += 0.5f;
-		if (Inventory.instance.UseItem(Inventory.instance.curSel?.seed, 1))
-		{
+		Inventory.instance.UseItem(Inventory.instance.curSel?.seed, 1, ()=>{
+
+			seedSown = Inventory.instance.curSel?.seed.prefab;
 			Instantiate(seedSown, targetPos, Quaternion.Euler(90, 0, 0));
-		}
+
+		});
+			
 	}
 
 	public void AddCharged(System.Action<float> onUpd)

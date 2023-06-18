@@ -7,4 +7,5 @@ public class Seed : ScriptableObject
 {
     public string seedName;
     public Sprite icon;
+    public GameObject prefab;
 }

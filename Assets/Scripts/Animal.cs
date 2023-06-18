@@ -23,7 +23,7 @@ public enum States
 	Dead,
 }
 
-public class Animal : MonoBehaviour, IEatable
+public class Animal : MonoBehaviour, IEatable, ITradable
 {
     protected IEatable target;
 
@@ -40,6 +40,7 @@ public class Animal : MonoBehaviour, IEatable
 	public float metabolism { get => (hp + atk + speed) * 10;}
 	public float curCalo;
 
+
 	protected FoodType foodType = FoodType.Game;
 
 	public int type => ((int)foodType);
@@ -51,8 +52,12 @@ public class Animal : MonoBehaviour, IEatable
 	[SerializeField]
 	Predation predateType = Predation.Herb;
 
+	//[SerializeField]
+	//List<GrowStat> edibleStat = new List<GrowStat>();
+
 	public int predate => ((int)predateType);
 
+	public int price { get => curPrice; set => curPrice = value; }
 
 	States prevStat;
 	States state;
@@ -60,6 +65,8 @@ public class Animal : MonoBehaviour, IEatable
 	NavMeshAgent agent;
 
 	float prevAtk;
+
+	int curPrice = 0;
 
 	const float AREALENGTH = 10f;
 
@@ -94,7 +101,7 @@ public class Animal : MonoBehaviour, IEatable
 		{
 			if (state == States.Escape)
 			{
-				Debug.Log(entityName + " 가" + (target as Animal).entityName + "로부터 도망치는중");
+				//Debug.Log(entityName + " 가" + (target as Animal).entityName + "로부터 도망치는중");
 				if (target.ToString() != "null")
 				{
 					Vector3 dest = transform.position - target.position;
@@ -112,7 +119,7 @@ public class Animal : MonoBehaviour, IEatable
 			}
 			else if (state == States.Chase)
 			{
-				Debug.Log(entityName + " 가" + (target as Animal).entityName + "를 쫓는중");
+				//Debug.Log(entityName + " 가" + (target as Animal).entityName + "를 쫓는중");
 				if (target.ToString() != "null")
 				{
 					Vector3 dest = target.position - transform.position;
@@ -132,7 +139,7 @@ public class Animal : MonoBehaviour, IEatable
 				//Debug.Log("target : " + target + ", valid :" + (target.ToString() != "null"));
 				if(target.ToString() == "null")
 				{
-					Debug.Log(entityName + "이 사냥감을 먹었다.");
+					//Debug.Log(entityName + "이 사냥감을 먹었다.");
 					agent.destination = transform.position;
 					agent.isStopped = false;
 					ChangeState(prevStat);
@@ -175,7 +182,7 @@ public class Animal : MonoBehaviour, IEatable
 			{
 				if (SetTarget())
 				{
-					Debug.Log(entityName + "이 찾았다 : " + (target as Animal).entityName);
+					//Debug.Log(entityName + "이 찾았다 : " + (target as GrowSeed).entityName);
 					ChangeState(States.Chase);
 				}
 				else if (agent.destination == transform.position || (agent.destination != transform.position && Arrived()))
@@ -200,10 +207,13 @@ public class Animal : MonoBehaviour, IEatable
 	public virtual void Damage(Animal attacker)
 	{
 		hp -= attacker.atk;
-		if(hp <= 0 && (attacker.predate == ((int)Predation.Omni) || type == attacker.predate))
+		if(hp <= 0)
 		{
-			state = States.Dead;
-			OnEaten(attacker);
+			ChangeState(States.Dead);
+			if ((attacker.predate == ((int)Predation.Omni) || type == attacker.predate))
+			{
+				OnEaten(attacker);
+			}
 		}
 		
 	}
@@ -223,12 +233,13 @@ public class Animal : MonoBehaviour, IEatable
 
 	public virtual bool SetTarget()
 	{
-		
-		List<Collider> col = new List<Collider>(Physics.OverlapSphere(transform.position, sightRad));
+		List<Collider> col = new List<Collider>(Physics.OverlapSphere(transform.position, sightRad, Physics.AllLayers, QueryTriggerInteraction.Collide));
+		//식물 발견은 함.
 		if(col.Count <= 1)
 			return false;
 		float minDist = sightRad * sightRad;
 		bool foundSomething = false;
+		//Debug.Log(col.Count);
 		for (int i = 0; i < col.Count; i++)
 		{
 			IEatable found = null;
@@ -238,6 +249,7 @@ public class Animal : MonoBehaviour, IEatable
 					continue;
 				if (predate == ((int)Predation.Omni) || predate == found.type)
 				{
+					//Debug.Log("PLANT");
 					float dist = (col[i].transform.position - transform.position).sqrMagnitude;
 					if (dist < minDist)
 					{
@@ -245,14 +257,13 @@ public class Animal : MonoBehaviour, IEatable
 						target = found;
 						foundSomething = true;
 					}
-				}
-				
+					
+				}	
 			}
-			
 		}
 		if(foundSomething)
 		{
-			target.onBeingSetTarget.Invoke(this);
+			target.onBeingSetTarget?.Invoke(this);
 			return true;
 		}
 		return false;
@@ -287,5 +298,12 @@ public class Animal : MonoBehaviour, IEatable
 			}
 		}
 		return false;
+	}
+
+	public void OnSell()
+	{
+		CoinManager.instance.CurMoney += curPrice;
+
+		Destroy(gameObject);
 	}
 }

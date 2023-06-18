@@ -89,7 +89,7 @@ public class Inventory : MonoBehaviour
 		}
 		onUpdateCur?.Invoke();
 	}
-	public bool UseItem(Seed seed, int cnt)
+	public bool UseItem(Seed seed, int cnt, System.Action callback)
 	{
 		if(inven.Count == 0 || seed == null)
 			return false;
@@ -97,6 +97,7 @@ public class Inventory : MonoBehaviour
 		int idx = inven.FindIndex(item => item.seed.seedName == seed.seedName);
 		if (slot != null && slot.count >= cnt) 
 		{ 
+			callback();
 			slot.count -= cnt;
 			if(slot.count == 0)
 			{
