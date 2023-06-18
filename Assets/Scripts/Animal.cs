@@ -78,13 +78,13 @@ public class Animal : MonoBehaviour, IEatable
 
 	public virtual void OnEaten(Animal by)
 	{
-		Debug.Log("먹힘");
+		Debug.Log(by.entityName + "에게 먹힘");
 		by.curCalo += metabolism + curCalo;
 	}
 
 	public virtual void OnDead()
 	{
-		Debug.Log("죽음");
+		Debug.Log(entityName + "가 죽음");
 		Destroy(gameObject);
 	}
 
@@ -94,8 +94,8 @@ public class Animal : MonoBehaviour, IEatable
 		{
 			if (state == States.Escape)
 			{
-				Debug.Log("도망치는중");
-				if (target != null)
+				Debug.Log(entityName + " 가" + (target as Animal).entityName + "로부터 도망치는중");
+				if (target.ToString() != "null")
 				{
 					Vector3 dest = transform.position - target.position;
 					dest = transform.position + dest.normalized * AREALENGTH;
@@ -112,8 +112,8 @@ public class Animal : MonoBehaviour, IEatable
 			}
 			else if (state == States.Chase)
 			{
-				Debug.Log("쫓는중");
-				if (target != null)
+				Debug.Log(entityName + " 가" + (target as Animal).entityName + "를 쫓는중");
+				if (target.ToString() != "null")
 				{
 					Vector3 dest = target.position - transform.position;
 					NavMeshHit hit;
@@ -129,9 +129,17 @@ public class Animal : MonoBehaviour, IEatable
 			}
 			else if (state == States.Attack)
 			{
-				Debug.Log("공격ㄱ중");
-				if(target != null)
+				//Debug.Log("target : " + target + ", valid :" + (target.ToString() != "null"));
+				if(target.ToString() == "null")
 				{
+					Debug.Log(entityName + "이 사냥감을 먹었다.");
+					agent.destination = transform.position;
+					agent.isStopped = false;
+					ChangeState(prevStat);
+				}
+				else
+				{
+					
 					agent.isStopped = true;
 					if (target.type == ((int)FoodType.Game))
 					{
@@ -142,13 +150,12 @@ public class Animal : MonoBehaviour, IEatable
 							{
 								prevAtk = Time.time;
 
-								Debug.Log((target as Animal).entityName + " 공격");
+								Debug.Log(entityName + "가 " + (target as Animal).entityName + " 공격");
 								(target as Animal).Damage(this);
 							}
 						}
 						else
 						{
-							Debug.Log("멀어서 다시쫓아감/도망감");
 							agent.isStopped = false;
 							ChangeState(prevStat);
 						}
@@ -159,31 +166,20 @@ public class Animal : MonoBehaviour, IEatable
 					}
 					else
 					{
-						Debug.Log("anj?");
 						agent.isStopped = false;
 						ChangeState(prevStat);
 					}
 				}
-				else
-				{
-					Debug.Log("공격끝");
-					
-					ChangeState(prevStat);
-				}
-				
-				
-
 			}
 			else if (state == States.Idle)
 			{
-				Debug.Log("타겟찾는중");
 				if (SetTarget())
 				{
+					Debug.Log(entityName + "이 찾았다 : " + (target as Animal).entityName);
 					ChangeState(States.Chase);
 				}
-				else if (agent.destination == null || (agent.destination != null && Arrived()))
+				else if (agent.destination == transform.position || (agent.destination != transform.position && Arrived()))
 				{
-					Debug.Log("목적지결정");
 					Vector3 dir = UnityEngine.Random.insideUnitSphere;
 					dir.y = 0;
 					Vector3 dest = transform.position + dir.normalized * AREALENGTH;
@@ -232,25 +228,29 @@ public class Animal : MonoBehaviour, IEatable
 		if(col.Count <= 1)
 			return false;
 		float minDist = sightRad * sightRad;
+		bool foundSomething = false;
 		for (int i = 0; i < col.Count; i++)
 		{
-			IEatable found = col[i].GetComponent<IEatable>();
-			if(found as Animal == this)
-				continue;
-			if(found != null)
+			IEatable found = null;
+			if(col[i].TryGetComponent<IEatable>(out found))
 			{
-				if(predate == ((int)Predation.Omni) || predate == found.type)
+				if (found as Animal == this)
+					continue;
+				if (predate == ((int)Predation.Omni) || predate == found.type)
 				{
 					float dist = (col[i].transform.position - transform.position).sqrMagnitude;
 					if (dist < minDist)
 					{
 						minDist = dist;
 						target = found;
+						foundSomething = true;
 					}
 				}
+				
 			}
+			
 		}
-		if(target != null)
+		if(foundSomething)
 		{
 			target.onBeingSetTarget.Invoke(this);
 			return true;
