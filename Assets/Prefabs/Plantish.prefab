@@ -50,11 +50,14 @@ MonoBehaviour:
   curState: 0
   growSteps:
   - state: 0
-    proceedTime: 3
-    calo: 50
+    proceedTime: 30
+    calo: 200
+    price: 25
   - state: 2
     proceedTime: 0
-    calo: 100
+    calo: 25
+    price: 500
+  curPrice: 100
 --- !u!135 &8498312542586820266
 SphereCollider:
   m_ObjectHideFlags: 0

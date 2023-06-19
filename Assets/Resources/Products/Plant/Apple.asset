@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 361ffef15481f664ea0c53fac401ca65, type: 3}
-  m_Name: Tiger
+  m_Name: Apple
   m_EditorClassIdentifier: 
-  myName: TIGER
-  myPrice: 200
-  icon: {fileID: 0}
-  prefab: {fileID: 1736732376848332, guid: fb573fe406c53c740acf51407165ee68, type: 3}
-  myType: 1
+  myName: APPLE
+  myPrice: 40
+  icon: {fileID: 21300000, guid: a2485f25042a1444391929b73e6fc78f, type: 3}
+  prefab: {fileID: 4022831445322236340, guid: 6e128be96b46a4f47a6a13e63a6ef65a, type: 3}
+  myType: 0

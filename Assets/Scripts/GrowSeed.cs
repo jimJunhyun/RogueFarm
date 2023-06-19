@@ -17,9 +17,10 @@ public struct GrowSteps
 	public GrowStat state;
 	public float proceedTime;
 	public int calo;
+	public int price;
 }
 
-public class GrowSeed : MonoBehaviour, IEatable
+public class GrowSeed : MonoBehaviour, IEatable, ITradable
 {
 	//public string entityName;
 
@@ -36,6 +37,11 @@ public class GrowSeed : MonoBehaviour, IEatable
 	public int type => ((int)FoodType.Herb);
 
 	public Action<Animal> onBeingSetTarget { get; set; }
+	public int price { get => curPrice; set => curPrice = value; }
+	public float priceMult { get; set; } = 1;
+
+	[SerializeField]
+	int curPrice = 100;
 
 	public void OnEaten(Animal by)
 	{
@@ -61,6 +67,7 @@ public class GrowSeed : MonoBehaviour, IEatable
 		{
 			yield return new WaitForSeconds(growSteps[growIdx].proceedTime);
 			growIdx += 1;
+			curPrice = growSteps[growIdx].price;
 			ChangeVisual();
 		}
 	}
@@ -78,5 +85,17 @@ public class GrowSeed : MonoBehaviour, IEatable
 				growVisuals[i].gameObject.SetActive(false);
 			}
 		}
+	}
+
+	public void OnSell()
+	{
+		CoinManager.instance.CurMoney += (int)(curPrice * priceMult);
+
+		Destroy(gameObject);
+	}
+
+	public void AddMult()
+	{
+		priceMult += 1;
 	}
 }

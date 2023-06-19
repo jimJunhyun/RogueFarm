@@ -104,7 +104,7 @@ public class Inventory : MonoBehaviour
 				inven.Remove(slot);
 				if(inven.Count > 0)
 				{
-					curSel = inven[idx];
+					curSel = inven[0];
 				}
 				else
 				{

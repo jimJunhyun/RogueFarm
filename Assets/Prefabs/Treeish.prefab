@@ -48,18 +48,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c0899296dac9c4692e34635cefa905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: "\uC0AC\uACFC"
   curState: 0
   growSteps:
   - state: 0
     proceedTime: 3
     calo: 75
+    price: 50
   - state: 1
     proceedTime: 6
     calo: 35
+    price: 100
   - state: 3
     proceedTime: 0
     calo: 125
+    price: 200
+  curPrice: 100
 --- !u!135 &8498312542586820266
 SphereCollider:
   m_ObjectHideFlags: 0

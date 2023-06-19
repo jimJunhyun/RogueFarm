@@ -37,7 +37,7 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 	public float aSpd;
 
 	public int statSum { get => hp + atk;}
-	public float metabolism { get => (hp + atk + speed) * 10;}
+	public float metabolism { get => (hp + atk + speed) * 5;}
 	public float curCalo;
 
 
@@ -49,6 +49,8 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 
 	public Action<Animal> onBeingSetTarget { get; set; }
 
+	protected Dictionary<States, ParticleSystem> stateEffPair = new Dictionary<States, ParticleSystem>();
+
 	[SerializeField]
 	Predation predateType = Predation.Herb;
 
@@ -58,16 +60,19 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 	public int predate => ((int)predateType);
 
 	public int price { get => curPrice; set => curPrice = value; }
+	public float priceMult { get; set; } = 1;
 
-	States prevStat;
-	States state;
+	public System.Action OnDayChanged;
 
-	NavMeshAgent agent;
+	protected States prevStat;
+	protected States state;
 
-	float prevAtk;
+	protected NavMeshAgent agent;
+
+	protected float prevAtk;
 
 	[SerializeField]
-	int curPrice = 0;
+	protected int curPrice = 0;
 
 	const float AREALENGTH = 10f;
 
@@ -82,6 +87,18 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 		curCalo = 0;
 
 		agent.speed = speed;
+
+		ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
+		for (int i = 0; i < particleSystems.Length; i++)
+		{
+			particleSystems[i].Stop();
+		}
+		stateEffPair.Add(States.Attack, particleSystems[0]);
+		stateEffPair.Add(States.Chase, particleSystems[1]);
+		stateEffPair.Add(States.Dead, particleSystems[2]);
+		
+
+		OnDayChanged += AddMult;
 	}
 
 	public virtual void OnEaten(Animal by)
@@ -93,6 +110,7 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 	public virtual void OnDead()
 	{
 		Debug.Log(entityName + "가 죽음");
+		DayManager.instance.RemoveAnimal(this);
 		Destroy(gameObject);
 	}
 
@@ -235,12 +253,10 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 	public virtual bool SetTarget()
 	{
 		List<Collider> col = new List<Collider>(Physics.OverlapSphere(transform.position, sightRad, Physics.AllLayers, QueryTriggerInteraction.Collide));
-		//식물 발견은 함.
 		if(col.Count <= 1)
 			return false;
 		float minDist = sightRad * sightRad;
 		bool foundSomething = false;
-		//Debug.Log(col.Count);
 		for (int i = 0; i < col.Count; i++)
 		{
 			IEatable found = null;
@@ -284,6 +300,27 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 	{
 		prevStat = state;
 		state = s;
+		if (stateEffPair.ContainsKey(state))
+		{
+			if(prevStat == States.Attack && state == States.Chase)
+			{
+
+			}
+			else
+			{
+				foreach (var item in stateEffPair.Keys)
+				{
+					if (item == state)
+					{
+						stateEffPair[item].Play();
+					}
+					else
+					{
+						stateEffPair[item].Stop();
+					}
+				}
+			}
+		}
 	}
 
 	bool Arrived()
@@ -301,9 +338,14 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 		return false;
 	}
 
+	public virtual void AddMult()
+	{
+		priceMult += 1;
+	}
+
 	public void OnSell()
 	{
-		CoinManager.instance.CurMoney += curPrice;
+		CoinManager.instance.CurMoney += (int)(curPrice * priceMult);
 
 		Destroy(gameObject);
 	}

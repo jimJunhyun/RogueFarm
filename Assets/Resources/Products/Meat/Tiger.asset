@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 361ffef15481f664ea0c53fac401ca65, type: 3}
-  m_Name: Rat
+  m_Name: Tiger
   m_EditorClassIdentifier: 
-  myName: RAT
-  myPrice: 50
-  icon: {fileID: 0}
-  prefab: {fileID: 1675308188217246, guid: 3cc9be1e4de713c4192e87916b6bab03, type: 3}
+  myName: TIGER
+  myPrice: 200
+  icon: {fileID: 21300000, guid: 37933f10d9f4c4a4ea5972913cb6eec2, type: 3}
+  prefab: {fileID: 38510449239070230, guid: f63588e278671c247a682aa776f8ce3f, type: 3}
   myType: 1

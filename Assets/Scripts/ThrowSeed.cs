@@ -12,6 +12,8 @@ public class ThrowSeed : MonoBehaviour
 
 	public GameObject seedSown;
 
+	public bool isThrowing = true;
+
 	System.Action<float> onCharged;
 
 	float chargedPower;
@@ -23,19 +25,24 @@ public class ThrowSeed : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetMouseButton(0))
+		if (Input.GetMouseButton(0) && isThrowing)
 		{
 			chargedPower += powerChargeSpeed * Time.deltaTime;
 			chargedPower = Mathf.Clamp(chargedPower, 0, 1);
 			onCharged.Invoke(chargedPower);
 		}
-		else if (Input.GetMouseButtonUp(0))
+		else if (Input.GetMouseButtonUp(0) && isThrowing)
 		{
 			Throw();
 			chargedPower = 0;
 			onCharged.Invoke(chargedPower);
 		}
-			
+		if (!isThrowing)
+		{
+			chargedPower = 0;
+			onCharged.Invoke(chargedPower);
+		}
+
 	}
 
 	public void Throw()

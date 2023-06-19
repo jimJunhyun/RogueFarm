@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PurchaseUIs : MonoBehaviour
+public class Tiger : Animal
 {
-
-
-    public void PurchaseSeed(Products info)
+	public override void AddMult()
 	{
-		
+		priceMult += 2;
 	}
 }
