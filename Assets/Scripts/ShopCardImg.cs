@@ -60,4 +60,9 @@ public class ShopCardImg : MonoBehaviour
 			ItemAdder.AddProduct(info, 1);
 		}
 	}
+
+	public void SetText()
+	{
+		ItemDescPanel.instance.OnUI(info.InfoText);
+	}
 }

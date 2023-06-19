@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myName: TIGER
   myPrice: 200
-  icon: {fileID: 21300000, guid: 37933f10d9f4c4a4ea5972913cb6eec2, type: 3}
+  icon: {fileID: 21300000, guid: f47a3bc0c40216f4fb547ab53951733e, type: 3}
   prefab: {fileID: 38510449239070230, guid: f63588e278671c247a682aa776f8ce3f, type: 3}
   myType: 1
+  InfoText: "\uB9E4\uC77C \uAC00\uCE58\uAC00 +200%\uB85C \uC801\uC6A9\uB429\uB2C8\uB2E4."

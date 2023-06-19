@@ -12,4 +12,6 @@ public class Products : ScriptableObject
     public GameObject prefab;
 
     public FoodType myType;
+
+    public string InfoText;
 }

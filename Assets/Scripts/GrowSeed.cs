@@ -43,12 +43,23 @@ public class GrowSeed : MonoBehaviour, IEatable, ITradable
 	[SerializeField]
 	int curPrice = 100;
 
+	[HideInInspector]
+	public bool interactable = true;
+
 	public void OnEaten(Animal by)
 	{
 		Debug.Log(by.entityName + "¿¡°Ô ¸ÔÈù ½Ä¹°");
 
 		by.curCalo += growSteps[growIdx].calo;
-		Destroy(gameObject);
+		if(curState == GrowStat.Tree)
+		{
+			StartCoroutine(ReInterer());
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+		
 	}
 
 	void Awake()
@@ -59,6 +70,7 @@ public class GrowSeed : MonoBehaviour, IEatable, ITradable
 		growVisuals.Remove(transform);
 		ChangeVisual();
         StartCoroutine(Grower());
+        
     }
 
 	IEnumerator Grower()
@@ -67,9 +79,19 @@ public class GrowSeed : MonoBehaviour, IEatable, ITradable
 		{
 			yield return new WaitForSeconds(growSteps[growIdx].proceedTime);
 			growIdx += 1;
+			curState = growSteps[growIdx].state;
 			curPrice = growSteps[growIdx].price;
 			ChangeVisual();
 		}
+	}
+
+	IEnumerator ReInterer()
+	{
+		interactable = false;
+		gameObject.layer = 13;
+		yield return new WaitForSeconds(growSteps[growIdx].proceedTime);
+		gameObject.layer = 1;
+		interactable = true;
 	}
 
 	void ChangeVisual()
@@ -91,10 +113,16 @@ public class GrowSeed : MonoBehaviour, IEatable, ITradable
 	{
 		CoinManager.instance.CurMoney += (int)(curPrice * priceMult);
 
-		Destroy(gameObject);
+		if (curState == GrowStat.Tree)
+		{
+			StartCoroutine(ReInterer());
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
 	}
-
-	public void AddMult()
+		public void AddMult()
 	{
 		priceMult += 1;
 	}

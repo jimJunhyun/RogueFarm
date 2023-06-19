@@ -121,7 +121,7 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 			if (state == States.Escape)
 			{
 				//Debug.Log(entityName + " 가" + (target as Animal).entityName + "로부터 도망치는중");
-				if (target.ToString() != "null")
+				if (target is null || target == null || target.ToString() != "null")
 				{
 					Vector3 dest = transform.position - target.position;
 					dest = transform.position + dest.normalized * AREALENGTH;
@@ -139,7 +139,8 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 			else if (state == States.Chase)
 			{
 				//Debug.Log(entityName + " 가" + (target as Animal).entityName + "를 쫓는중");
-				if (target.ToString() != "null")
+				//Debug.Log((target is not null) + " || " + (target != null) + " || " + (target?.ToString()));
+				if (target is not null && target != null && target?.ToString() != "null")
 				{
 					Vector3 dest = target.position - transform.position;
 					NavMeshHit hit;
@@ -156,7 +157,7 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 			else if (state == States.Attack)
 			{
 				//Debug.Log("target : " + target + ", valid :" + (target.ToString() != "null"));
-				if(target.ToString() == "null")
+				if(target is null || target == null || target.ToString() == "null")
 				{
 					//Debug.Log(entityName + "이 사냥감을 먹었다.");
 					agent.destination = transform.position;
@@ -189,6 +190,10 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 					else if (target.type == ((int)FoodType.Herb))
 					{
 						target.OnEaten(this);
+						if(!(target as GrowSeed).interactable)
+							target = null;
+						agent.isStopped = false;
+						ChangeState(prevStat);
 					}
 					else
 					{
@@ -252,7 +257,7 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 
 	public virtual bool SetTarget()
 	{
-		List<Collider> col = new List<Collider>(Physics.OverlapSphere(transform.position, sightRad, Physics.AllLayers, QueryTriggerInteraction.Collide));
+		List<Collider> col = new List<Collider>(Physics.OverlapSphere(transform.position, sightRad, ~(1 << 13), QueryTriggerInteraction.Collide));
 		if(col.Count <= 1)
 			return false;
 		float minDist = sightRad * sightRad;
@@ -266,7 +271,9 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 					continue;
 				if (predate == ((int)Predation.Omni) || predate == found.type)
 				{
-					//Debug.Log("PLANT");
+					if(found.type == ((int)FoodType.Herb) && !(found as GrowSeed).interactable)
+						continue;
+
 					float dist = (col[i].transform.position - transform.position).sqrMagnitude;
 					if (dist < minDist)
 					{
@@ -274,7 +281,7 @@ public class Animal : MonoBehaviour, IEatable, ITradable
 						target = found;
 						foundSomething = true;
 					}
-					
+					//Debug.Log("PLANT");
 				}	
 			}
 		}

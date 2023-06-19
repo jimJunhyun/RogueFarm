@@ -20,7 +20,9 @@ public class Monkey : Animal
 					continue;
 				if ((predate == ((int)Predation.Omni) || predate == found.type))
 				{
-					if((found is Animal && (found as Animal).statSum <= statSum) || found is GrowSeed)
+					if (found.type == ((int)FoodType.Herb) && !(found as GrowSeed).interactable)
+						continue;
+					if ((found.type == ((int)FoodType.Game) && (found as Animal).statSum <= statSum) || ((found.type == ((int)FoodType.Herb)) && (found as GrowSeed).interactable))
 					{
 						float dist = (col[i].transform.position - transform.position).sqrMagnitude;
 						if (dist < minDist)

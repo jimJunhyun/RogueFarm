@@ -21,6 +21,8 @@ public class Seller : MonoBehaviour
 					Debug.Log(hits[i].transform.name);
 					if(hits[i].transform.TryGetComponent<ITradable>(out tr))
 					{
+						if(tr as GrowSeed != null && !(tr as GrowSeed).interactable)
+							continue;
 						tr.OnSell();
 						CoinManager.instance.UIUpd();
 						break;

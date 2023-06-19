@@ -17,3 +17,4 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: c475d0060f5347e41be76ee9e19be52d, type: 3}
   prefab: {fileID: 4022831445322236340, guid: ae08ec6260e26974fbca0bfd82b81bf1, type: 3}
   myType: 0
+  InfoText: "\uAC12\uBE44\uC2FC \uCD08\uBCF8 \uC2DD\uBB3C\uC785\uB2C8\uB2E4."

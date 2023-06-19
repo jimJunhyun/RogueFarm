@@ -50,7 +50,7 @@ MonoBehaviour:
   curState: 0
   growSteps:
   - state: 0
-    proceedTime: 30
+    proceedTime: 45
     calo: 200
     price: 25
   - state: 2

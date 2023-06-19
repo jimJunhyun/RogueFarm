@@ -12,13 +12,6 @@ public class ItemAdder : MonoBehaviour
     //    if(Input.GetMouseButtonDown(1))
     //        AddProduct(allSeeds[Random.Range(0, allSeeds.Count)], 1);
     //}
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            LoadShopData.instance.OnShop();
-        }
-    }
 
     public static void AddProduct(Products s, int cnt)
 	{

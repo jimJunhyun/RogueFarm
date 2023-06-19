@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myName: RAT
   myPrice: 50
-  icon: {fileID: 21300000, guid: 37933f10d9f4c4a4ea5972913cb6eec2, type: 3}
+  icon: {fileID: 21300000, guid: fd8f1630f3519a942b38f16b7db648d8, type: 3}
   prefab: {fileID: 6556895879978335624, guid: 12109b3c2afe6ac4cabe0d24e4fc1a1c, type: 3}
   myType: 1
+  InfoText: "\uB9E4\uC77C \uAC00\uCE58\uAC00 \uB298\uC5B4\uB098\uB294 \uB300\uC2E0,
+    \uC2A4\uC2A4\uB85C\uB97C \uBCF5\uC81C\uD569\uB2C8\uB2E4."
