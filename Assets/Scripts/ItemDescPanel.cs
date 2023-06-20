@@ -23,6 +23,6 @@ public class ItemDescPanel : MonoBehaviour
 
 	public void OffUI()
 	{
-		gameObject.SetActive(true);
+		gameObject.SetActive(false);
 	}
 }

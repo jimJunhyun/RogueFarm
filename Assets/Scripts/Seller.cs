@@ -13,7 +13,9 @@ public class Seller : MonoBehaviour
             Ray r = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
             RaycastHit[] hits;
-            if((hits = Physics.RaycastAll(r, Mathf.Infinity, ~((1 << 8) | (1 << 10)))).Length > 0)
+			hits = Physics.RaycastAll(r, Mathf.Infinity, ~((1 << 8) | (1 << 10)), QueryTriggerInteraction.Collide);
+			Debug.Log(hits.Length);
+			if (hits.Length > 0)
 			{
 				ITradable tr = null;
 				for (int i = 0; i < hits.Length; i++)

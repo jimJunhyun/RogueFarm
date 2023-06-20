@@ -50,10 +50,10 @@ public class DayManager : MonoBehaviour
 	{
 		for (int i = 0; i < allAnimals.Count; i++)
 		{
-			if (allAnimals[i].CheckHunger())
+			if ((bool)(allAnimals[i]?.CheckHunger()))
 			{
 				
-				allAnimals[i].OnDead();
+				allAnimals[i]?.OnDead();
 				--i;
 			}
 		}
